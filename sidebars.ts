@@ -54,6 +54,7 @@ const sidebars: SidebarsConfig = {
             items: [
                 'advanced/customization',
                 'advanced/integrations',
+                'advanced/print',
                 'advanced/security',
             ],
         },
