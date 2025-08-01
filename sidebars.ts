@@ -40,10 +40,9 @@ const sidebars: SidebarsConfig = {
             collapsible: true,
             collapsed: true,
             items: [
-                'api/authentication',
-                'api/orders',
-                'api/inventory',
-                'api/shipping',
+                'api/api-client-to-wes',
+                'api/api-wes-to-client',
+                'api/authentication'
             ],
         },
         {

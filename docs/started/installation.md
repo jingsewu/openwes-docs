@@ -4,91 +4,132 @@ title: Installation
 sidebar_position: 2
 ---
 
-# OpenWes Installation Guide
+# OpenWES Installation Guide
 
-Follow these steps to install and set up **OpenWes** on your system. OpenWes is designed to be easy to deploy, whether you're running it locally for development or in a cloud environment for production.
+Choose one of the two paths below:
 
-## Prerequisites
+1. **Docker (recommended)** – spin everything up in < 30 s
+2. **Manual install** – for full control or local development
 
-- [Java](https://www.java.com/) (17+): For running the backend server applications.
-- [MySQL](https://www.mysql.com/) (8.0+): Used as the relational database for storing warehouse data.
-- [Nacos](https://nacos.io/) (2.0+): A service registry and configuration management tool.
-- [Redis](https://redis.io/) (7.0+): Used for caching and session management.
-- [Node.js](https://nodejs.org/)(18+): For running the client application.
+---
 
-> Mysql, Nacos and Redis should be installed on the same machine.
-> You can use [docker-compose file](/docker/docker-compose.yml) to install all the middlewares like mysql, nacos and redis with docker-compose.
-## Steps
+<details open>
+<summary><h2>🐳 Docker Quick-Start (30 s)</h2></summary>
 
-### 1. Clone the repository:
-   ```bash
-   git clone https://github.com/jingsewu/open-wes.git
-   ```
-### 2. Set Up the Backend Servers
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/) (v2.20+)
 
-**2.1 Add Nacos Configuration**  
-
-You can find these scripts from the ```initdb.d``` directory in the root directory
-
-Execute the script to load the Nacos configuration into the MySQL database:
-
-```sql
-mysql -u root -p nacos_config < nacos_config.sql
+### One-liner
+```bash
+git clone https://github.com/jingsewu/open-wes.git
+cd open-wes
+HOST_IP=$(hostname -I | awk '{print $1}') docker-compose up -d
 ```
-**2.2: Configure the Hostname**
 
-Edit your system’s **hosts** file to map the Nacos hostname (```nacos.openwes.com```) to ```127.0.0.1```:
+Services will be available at:
 
-* Linux: /etc/hosts
-* Windows: C:\Windows\System32\drivers\etc\hosts  
-Add the following line to the file:
+| Service | URL                        |
+|---------|----------------------------|
+| Web UI | http://localhost       |
+| Nacos  | http://localhost:8848/nacos |
 
-```127.0.0.1 nacos.openwes.com```
+</details>
 
-**2.3: Create the OpenWes Database**
-Log into MySQL and create the openwes database:
+---
 
-  ```sql
-    create database openwes;
-  ```
-**2.4: Start the Backend Servers**
-Navigate to the server/server directory and start the backend servers:
+<details>
+<summary><h2>🛠️ Manual / Local Install</h2></summary>
 
-* WesApplication
-* GatewayApplication
-* StationApplication
-  You can use an IDE (like IntelliJ or Eclipse) or the following command:
+### Prerequisites
+- **Java 17+** – [download](https://www.java.com/)
+- **MySQL 8.0+** – [download](https://www.mysql.com/)
+- **Nacos 2.0+** – [download](https://nacos.io/)
+- **Redis 7.0+** – [download](https://redis.io/)
+- **Node.js 18+** – [download](https://nodejs.org/)
 
-```java
+> ℹ️ MySQL, Nacos, and Redis **must** run on the same machine.  
+> You can use the included `docker-compose.yml` to install them quickly.
+
+---
+
+### 1. Clone repository
+```bash
+git clone https://github.com/jingsewu/open-wes.git
+cd open-wes
+```
+
+---
+
+### 2. Set up backend
+
+#### 2.1 Load Nacos schema
+```bash
+mysql -u root -p nacos_config < initdb.d/nacos_config.sql
+```
+
+#### 2.2 Add host entries
+Edit your hosts file:
+
+| OS | Path |
+|----|------|
+| Linux/macOS | `/etc/hosts` |
+| Windows | `C:\Windows\System32\drivers\etc\hosts` |
+
+Append:
+```
+127.0.0.1 nacos.openwes.com
+127.0.0.1 redis.openwes.com
+127.0.0.1 mysql.openwes.com
+```
+
+#### 2.3 Create application database
+```sql
+mysql -u root -p -e "CREATE DATABASE openwes;"
+```
+
+#### 2.4 Start services
+From `server/server/` run (in separate terminals or via IDE):
+
+```bash
 java -jar WesApplication.jar
 java -jar GatewayApplication.jar
 java -jar StationApplication.jar
 ```
 
-### 3. Set Up the Client
+---
 
-**3.1: Update Webpack Configuration**
-Rename the Webpack configuration file for development:
+### 3. Set up client
+
+#### 3.1 Rename webpack config
 ```bash
 mv client/build/webpack.config.example.dev.js client/build/webpack.config.dev.js
 ```
-**3.2: Install Dependencies for the Client**
-Navigate to the client directory and install the required dependencies:
-```npm
+
+#### 3.2 Install dependencies
+```bash
 cd client
 npm install
 ```
-**3.3: Start the Client**
-Run the client application:
-```npm
+
+#### 3.3 Start client
+```bash
 npm start
 ```
-The client will be available on http://localhost:4000 by default.
 
-Troubleshooting
-If you encounter any issues during the installation, check the following:
+Client opens at **http://localhost:4000**.
 
-* Missing dependencies: Ensure that all required software (Java, MySQL, Nacos, Redis, Node.js) is installed and configured correctly.
-* Host file issues: Make sure that nacos.openwes.com points to the correct IP address (127.0.0.1).
-* Database issues: Ensure that the openwes database was created successfully in MySQL.  
-For further assistance, consult the [OpenWes Community](https://github.com/jingsewu/open-wes/issues) or create an issue in the GitHub repository.
+---
+
+### Troubleshooting
+| Symptom | Check |
+|---------|-------|
+| Service unreachable | All prerequisites installed and running |
+| DNS errors | `hosts` file contains the three aliases |
+| DB errors | `openwes` database exists and credentials are correct |
+
+Still stuck?  
+Open an issue in the [GitHub repo](https://github.com/jingsewu/open-wes/issues).
+
+</details>
+
