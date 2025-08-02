@@ -117,7 +117,7 @@ npm install
 npm start
 ```
 
-Client opens at **http://localhost:4000**.
+Client opens at **http://localhost:4001**.
 
 ---
 

@@ -1,109 +1,138 @@
 ---
 id: installation
-title: 安装
+title: 安装指南
 sidebar_position: 2
 ---
 
-# OpenWes 安装指南
+# OpenWES 安装指南
 
-按照以下步骤在您的系统上安装并设置 **OpenWes**。OpenWes 设计为易于部署，无论您是在本地开发环境中运行，还是在云环境中用于生产。
+请选择以下两种方式之一：
 
-## 前提条件
+1. **Docker（推荐）** – 30 秒内一键启动所有服务
+2. **手动安装** – 适合需要完全控制或本地开发的用户
 
-*   [Java](https://www.java.com/) (17+): 用于运行后端服务器应用程序。
+---
 
-*   [MySQL](https://www.mysql.com/) (8.0+): 用作关系型数据库，用于存储仓库数据。
+<details open>
+<summary><h2>🐳 Docker 快速启动（30 秒）</h2></summary>
 
-*   [Nacos](https://nacos.io/) (2.0+): 服务注册和配置管理工具。
+### 前置条件
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)（v2.20 及以上）
 
-*   [Redis](https://redis.io/) (7.0+): 用于缓存和会话管理。
-
-*   [Node.js](https://nodejs.org/)(18+): 用于运行客户端应用程序。
-
-> MySQL、Nacos 和 Redis 应安装在同一台机器上。 您可以使用 [docker-compose 文件](../../static/docker/docker-compose.yml) 通过 docker-compose 安装所有中间件（如 MySQL、Nacos 和 Redis）。
-
-## 步骤
-
-### 1\. 克隆代码仓库：
-
-```
+### 一行命令搞定
+```bash
 git clone https://github.com/jingsewu/open-wes.git
+cd open-wes
+HOST_IP=$(hostname -I | awk '{print $1}') docker-compose up -d
 ```
 
-### 2\. 设置后端服务器
+启动后可通过以下地址访问服务：
 
-**2.1 加载 Nacos 配置**
-执行脚本将 Nacos 配置加载到 MySQL 数据库中：
+| 服务名称 | 访问地址                    |
+|----------|-----------------------------|
+| Web 界面 | http://localhost            |
+| Nacos    | http://localhost:8848/nacos |
 
+</details>
+
+---
+
+<details>
+<summary><h2>🛠️ 手动 / 本地安装</h2></summary>
+
+### 前置条件
+- **Java 17+** – [下载地址](https://www.java.com/)
+- **MySQL 8.0+** – [下载地址](https://www.mysql.com/)
+- **Nacos 2.0+** – [下载地址](https://nacos.io/)
+- **Redis 7.0+** – [下载地址](https://redis.io/)
+- **Node.js 18+** – [下载地址](https://nodejs.org/)
+
+---
+
+### 1. 克隆仓库
+```bash
+git clone https://github.com/jingsewu/open-wes.git
+cd open-wes
 ```
-mysql -u root -p nacos_config < server/script/nacos_config.sql
+
+---
+
+### 2. 配置后端
+#### 2.1 创建nacos数据库
+```sql
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS nacos_config CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 ```
 
-**2.2 配置主机名**
-
-编辑系统的 **hosts** 文件，将 Nacos 主机名（`nacos.openwes.com`）映射到 `127.0.0.1`：
-
-*   Linux: /etc/hosts
-
-*   Windows: C:\Windows\System32\drivers\etc\hosts
-    在文件中添加以下行：
-
-```
-172.0.0.1 nacos.openwes.com
+#### 2.2 导入 Nacos 数据库结构
+```bash
+mysql -u root -p nacos_config < initdb.d/nacos_config.sql
 ```
 
-**2.3 创建 OpenWes 数据库** 登录 MySQL 并创建 openwes 数据库：
+#### 2.3 配置本地 hosts 文件
+根据操作系统编辑对应路径的 hosts 文件：
 
+| 操作系统 | 路径 |
+|----------|------|
+| Linux/macOS | `/etc/hosts` |
+| Windows | `C:\Windows\System32\drivers\etc\hosts` |
+
+添加以下内容：
 ```
-  create database openwes;
+127.0.0.1 nacos.openwes.com 
+127.0.0.1 redis.openwes.com
+127.0.0.1 mysql.openwes.com
+```
+> nacos.openwes.com 对应nacos服务的ip地址  
+> redis.openwes.com 对应redis服务的ip地址  
+> mysql.openwes.com 对应mysql服务的ip地址
+
+#### 2.4 创建应用数据库
+```sql
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS openwes CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 ```
 
-**2.4 启动后端服务器** 进入 server/server 目录并启动后端服务器：
+#### 2.5 启动服务
+在 `server/server/` 目录下，分别打开多个终端或用 IDE 启动以下服务：
 
-*   WesApplication
-
-*   GatewayApplication
-
-*   StationApplication  
-您可以使用 IDE（如 IntelliJ 或 Eclipse）或以下命令：
-
-```
+```bash
 java -jar WesApplication.jar
 java -jar GatewayApplication.jar
 java -jar StationApplication.jar
 ```
 
-### 3\. 设置客户端
+---
 
-**3.1 更新 Webpack 配置** 重命名开发环境的 Webpack 配置文件：
+### 3. 配置前端
 
-```
+#### 3.1 重命名 webpack 配置文件
+```bash
 mv client/build/webpack.config.example.dev.js client/build/webpack.config.dev.js
 ```
 
-**3.2 安装客户端依赖** 进入客户端目录并安装所需依赖：
-
-```
+#### 3.2 安装依赖
+```bash
 cd client
 npm install
 ```
 
-**3.3 启动客户端** 运行客户端应用程序：
-
-```
+#### 3.3 启动前端
+```bash
 npm start
 ```
 
-客户端默认将在 [http://localhost:4001](http://localhost:4001/) 上运行。
+前端默认打开地址：**http://localhost:4001**
 
-### 故障排除
+---
 
-如果在安装过程中遇到任何问题，请检查以下内容：
+### 常见问题排查
+| 问题现象 | 检查项 |
+|----------|--------|
+| 服务无法访问 | 是否已安装并启动所有前置条件 |
+| DNS 报错 | 检查 hosts 文件中是否包含三条别名 |
+| 数据库报错 | 确认 `openwes` 数据库存在且连接信息正确 |
 
-*   缺少依赖项：确保所有必需的软件（Java、MySQL、Nacos、Redis、Node.js）已正确安装和配置。
+仍有问题？  
+前往 [GitHub 仓库](https://github.com/jingsewu/open-wes/issues) 提交 issue。
 
-*   主机文件问题：确保 nacos.openwes.com 指向正确的 IP 地址（127.0.0.1）。
-
-*   数据库问题：确保在 MySQL 中成功创建了 openwes 数据库。
-    
-如需进一步帮助，请咨询 [OpenWes 社区](https://github.com/jingsewu/open-wes/issues) 或在 GitHub 仓库中创建问题。
+</details>
