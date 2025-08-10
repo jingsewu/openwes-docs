@@ -18,48 +18,70 @@ const sidebars: SidebarsConfig = {
             label: 'Getting Started',
             collapsible: false,
             items: [
-                'started/introduction', // Corresponds to docs/introduction.md
-                'started/installation', // Corresponds to docs/installation.md
-                'started/quick-start', // Corresponds to docs/quick-start.md
+                'started/introduction',
+                'started/installation',
+                'started/quick-start',
             ],
         },
         {
             type: 'category',
-            label: 'Core Concepts',
+            label: 'System Overview',
             collapsible: true,
             collapsed: false,
             items: [
-                'concepts/architecture', // Corresponds to docs/architecture.md
-                'concepts/user-guide', // Corresponds to docs/modules.md
-                'concepts/workflow', // Corresponds to docs/workflow.md
-            ],
-        },
-        {
-            type: 'category',
-            label: 'API Reference',
-            collapsible: true,
-            collapsed: true,
-            items: [
-                'api/api-client-to-wes',
-                'api/api-wes-to-client',
-                'api/authentication'
-            ],
-        },
-        {
-            type: 'category',
-            label: 'Advanced Topics',
-            collapsible: true,
-            collapsed: true,
-            items: [
-                'advanced/customization',
-                'advanced/integrations',
+                'concepts/architecture',
+                'concepts/features-overview',
+                'concepts/workflow',
                 'advanced/print',
-                'advanced/security',
             ],
         },
         {
-            type: 'doc',
-            id: 'faq', // Corresponds to docs/faq.md
+            type: 'category',
+            label: 'For Warehouse Operators',
+            collapsible: true,
+            collapsed: true,
+            items: [
+                'operators/operators-guide',
+                'concepts/user-guide',
+                'operators/operator-troubleshooting',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'For WMS Managers',
+            collapsible: true,
+            collapsed: true,
+            items: [
+                'managers/managers-guide',
+                'advanced/customization',
+                'advanced/security',
+                'advanced/deployment',
+                'advanced/system-administration',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'For Developers',
+            collapsible: true,
+            collapsed: true,
+            items: [
+                'developers/developers-guide',
+                'advanced/developer-setup',
+                {
+                    type: 'category',
+                    label: 'API Reference',
+                    collapsible: true,
+                    collapsed: false,
+                    items: [
+                        'api/api-client-to-wes',
+                        'api/api-wes-to-client',
+                        'api/authentication',
+                        'api/integration-examples'
+                    ],
+                },
+                'advanced/plugin-development',
+                'advanced/integrations',
+            ],
         },
     ],
 };

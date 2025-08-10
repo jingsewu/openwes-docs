@@ -48,9 +48,6 @@ Services will be available at:
 - **Redis 7.0+** – [download](https://redis.io/)
 - **Node.js 18+** – [download](https://nodejs.org/)
 
-> ℹ️ MySQL, Nacos, and Redis **must** run on the same machine.  
-> You can use the included `docker-compose.yml` to install them quickly.
-
 ---
 
 ### 1. Clone repository

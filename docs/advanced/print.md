@@ -1,8 +1,12 @@
 ---
 id: print
-title: Print
-sidebar_position: 3
+title: Printing System Guide
+sidebar_position: 4
 ---
+
+# Printing System Guide
+
+Complete guide to OpenWES printing functionality including system architecture, configuration, and daily operations.
 
 ## 0. Printing Module Design
 ![print_architecture.png](../../static/img/print/print_architecture.png)

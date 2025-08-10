@@ -31,7 +31,7 @@ OpenWes is a **flexible and modular** system that helps warehouse operators effi
 ✅ **Real-Time Execution** – Process warehouse events in real time.  
 ✅ **Multi-Protocol Support** – Integrate with various industrial systems (Modbus, OPC-UA, MQTT, etc.).  
 ✅ **Scalable & Cloud-Ready** – Deploy on-premises or in the cloud.  
-✅ **Open Source** – Open-source architecture for customization and extension.
+✅ **Open Source** – Open-source architecture for customization and extension.  
 ✅ **Flexible deployment options** – use as a bridge between WMS and RCS, or as a standalone WMS
 
 
