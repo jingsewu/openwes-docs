@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm \"D:\\github-workspace\\openwes-docs\\docs\\faq.md\")",
+      "Bash(mv \"D:\\github-workspace\\openwes-docs\\docs\\advanced\\troubleshooting.md\" \"D:\\github-workspace\\openwes-docs\\docs\\advanced\\system-administration.md\")"
+    ],
+    "deny": []
+  }
+}
